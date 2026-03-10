@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Coinbase Crypto Prob Scanner (3% in 2h)</title>
+  <link rel="stylesheet" href="/static/style.css"/>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div>
+        <h1>Coinbase Crypto Prob Scanner</h1>
+        <p class="subtitle">Probability of reaching <b>+3%</b> within <b>120 minutes</b> (2 hours) from scan time, using 5-minute candles.</p>
+      </div>
+      <div class="badges">
+        <span id="badge-mode" class="badge">…</span>
+        <span id="badge-model" class="badge">…</span>
+      </div>
+    </header>
+
+    <section class="panel">
+      <div class="panel-header">
+        <h2>Status</h2>
+        <button class="btn" id="btn-refresh">Refresh</button>
+      </div>
+      <div id="status" class="status-grid">
+        <div class="status-card">
+          <div class="k">Coinbase</div>
+          <div class="v" id="coinbase-ok">…</div>
+          <div class="s" id="coinbase-msg">…</div>
+        </div>
+        <div class="status-card">
+          <div class="k">Scan</div>
+          <div class="v" id="scan-times">…</div>
+          <div class="s" id="scan-config">…</div>
+        </div>
+        <div class="status-card">
+          <div class="k">Coverage</div>
+          <div class="v" id="coverage-main">…</div>
+          <div class="s" id="coverage-skip">…</div>
+        </div>
+        <div class="status-card">
+          <div class="k">Rate limits</div>
+          <div class="v" id="rl-main">…</div>
+          <div class="s" id="rl-sub">…</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-header">
+        <h2>Scores</h2>
+        <div class="filters">
+          <label>Min prob
+            <input id="min-prob" type="number" step="0.01" min="0" max="1" value="0.00"/>
+          </label>
+          <label>Quote
+            <select id="quote-filter">
+              <option value="">All</option>
+            </select>
+          </label>
+          <label class="toggle">
+            <input id="show-stale" type="checkbox"/>
+            Show stale
+          </label>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table id="scores-table">
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th class="num">Price</th>
+              <th class="num">Prob 3%</th>
+              <th>Quote</th>
+              <th>Last candle</th>
+              <th>Notes</th>
+              <th>Risk</th>
+            </tr>
+          </thead>
+          <tbody id="scores-body">
+            <tr><td colspan="7" class="muted">Loading…</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="hint">Sorted by Prob 3% descending. “STALE_CANDLES” means the latest 5-minute close is older than the staleness threshold.</p>
+    </section>
+
+    <section class="panel">
+      <div class="panel-header">
+        <h2>Training</h2>
+        <div class="training-controls">
+          <input id="admin-password" type="password" placeholder="ADMIN_PASSWORD"/>
+          <button class="btn primary" id="btn-train">Start training</button>
+        </div>
+      </div>
+      <div class="training-status" id="training-status">Idle.</div>
+      <div class="hint">Training uses logistic regression (elastic-net) + calibration (Platt vs isotonic by validation Brier). It runs in the background.</div>
+    </section>
+
+    <footer>
+      <span class="muted">Render tip: mount persistent disk at <code>/var/data</code> and set <code>MODEL_DIR=/var/data/model</code>.</span>
+    </footer>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
