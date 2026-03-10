@@ -46,22 +46,24 @@ class UniverseManager:
         self.store = JsonStore(model_dir / "universe_cache.json")
         self.fallback_path = Path(__file__).resolve().parent / "data" / "fallback_universe.json"
 
-def _fallback(self, warning: str) -> UniverseResult:
-    import json
-    products: List[str] = []
-    try:
-        products = json.loads(self.fallback_path.read_text(encoding="utf-8"))
-    except Exception:
-        products = []
-    # filter by quote allowlist if possible
-    allow = set(self.s.quote_allowlist_list)
-    products = [p for p in products if _parse_product_id(p)[1] in allow]
-    return UniverseResult(
-        products=products[: self.s.UNIVERSE_MAX],
-        source="fallback",
-        warning=warning,
-        refreshed_utc=utc_now().isoformat(),
-    )
+    def _fallback(self, warning: str) -> UniverseResult:
+        import json
+
+        products: List[str] = []
+        try:
+            products = json.loads(self.fallback_path.read_text(encoding="utf-8"))
+        except Exception:
+            products = []
+
+        # filter by quote allowlist if possible
+        allow = set(self.s.quote_allowlist_list)
+        products = [p for p in products if _parse_product_id(p)[1] in allow]
+        return UniverseResult(
+            products=products[: self.s.UNIVERSE_MAX],
+            source="fallback",
+            warning=warning,
+            refreshed_utc=utc_now().isoformat(),
+        )
 
     def load_cached(self) -> Optional[UniverseResult]:
         obj = self.store.read()
