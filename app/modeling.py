@@ -140,7 +140,7 @@ def _fit_candidate(
     best_cal = None
 
     for method in ["sigmoid", "isotonic"]:
-        cal = CalibratedClassifierCV(base_estimator=base, cv="prefit", method=method)
+        cal = CalibratedClassifierCV(estimator=base, cv="prefit", method=method)
         cal.fit(X_val, y_val)
         p_val = cal.predict_proba(X_val)[:, 1]
         brier = float(brier_score_loss(y_val, p_val))
